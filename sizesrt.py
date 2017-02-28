@@ -4,8 +4,6 @@ import subprocess
 import sys
 import os
 
-def cmp(a, b):
-    return (a > b) - (a < b)
 
 class Size(object):
     _value = None
