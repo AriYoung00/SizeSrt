@@ -19,18 +19,20 @@ class Size(object):
             return -1
 
         # The other has no unit; this must be greater
-        if other == None:
+        if other is None:
             return False
 
         # This has no unit; the other must be greater
-        if self._unit == None:
+        if self._unit is None:
             return True
 
-        # Since we've already covered equal units, if this unit is G, it must be greater
+        # Since we've already covered equal units, if this unit is G, it must
+        # be greater
         if self._unit == "G":
             return False
 
-        # Since we've already established that this isn't G, if the other is G, the other must be greater
+        # Since we've already established that this isn't G, if the other is G,
+        # the other must be greater
         if other == "G":
             return True
 
@@ -49,15 +51,18 @@ class Size(object):
         return self._value < other._value
 
     def __str__(self):
-        return "%d%s" % (self._value, self._unit if self._unit != None else "B")
+        return "%d%s" % (self._value,
+                         self._unit if self._unit is not None else "B")
+
 
 def get_folder_size(folder):
     try:
-        size = subprocess.check_output(["du", "-sh", folder]).decode('UTF-8').strip('\n').split('\t')[0]
+        size = subprocess.check_output(
+            ["du", "-sh", folder]).decode('UTF-8').strip('\n').split('\t')[0]
     except subprocess.CalledProcessError:
         print("Error: unable to find size of file/folder %s" % folder)
         return Size(0, None)
-    
+
     # If du returns no unit (i.e., this many bytes)
     to_convert = float if "." in size else int
     try:
@@ -66,11 +71,13 @@ def get_folder_size(folder):
     except ValueError:
         return Size(to_convert(size[:-1]), size[-1])
 
-def fix_str_len(to_fix, length, empty_fill = " ", extra_term = "..."):
+
+def fix_str_len(to_fix, length, empty_fill=" ", extra_term="..."):
     if len(to_fix) < length:
         return to_fix + (empty_fill * (length - len(to_fix)))
     if len(to_fix) > length:
         return to_fix[:-(len(to_fix) - (length + 3))] + extra_term
+
 
 def main():
     if len(sys.argv) < 2:
@@ -102,4 +109,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
